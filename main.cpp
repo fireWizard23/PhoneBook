@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <string>
 #include <fstream>
-#include<string.h>
+
 
 using namespace std;
 
@@ -269,34 +269,61 @@ void FindContactPage() {
 
 void DeleteContactPage() {
     clear_screen();
-
-    string name;
-    Contact n;
-    bool foundContact = false;
-    getLine("Enter name: ", name);
+    string name = "";
+    vector<Contact> contactsFound;
+    vector<int> indexes;
     int index = 0;
+    getLine("Enter name: ", name);
     for(Contact c : allContacts) {
-        if(c.name == name) {
-            n = c;
-            foundContact = true;
-            index++;
-            break;
+        if(IsEqual(c.name, name)) {
+            contactsFound.push_back(c);
+            indexes.push_back(index);
         }
         index++;
     }
 
-    if(foundContact) {
-        cout << n.GetDisplayText();
-        int res = interactiveInput(
-             "Are you sure you want to delete " + n.GetDisplayText(),
-             {
-                 "Back", "Delete"
-             }
-        );
-        if(res == 1) {
-            allContacts.erase(allContacts.begin() + index);
-            cout << endl;
-            acout("Contact deleted!");
+
+    if(contactsFound.size() > 0) {
+        if(contactsFound.size() == 1) {
+            Contact n = contactsFound[0];
+            cout << n.GetDisplayText();
+            int res = interactiveInput(
+                 "Are you sure you want to delete " + n.GetDisplayText(),
+                 {
+                     "Back", "Delete"
+                 }
+            );
+            if(res == 1) {
+                allContacts.erase(allContacts.begin() + indexes[0]);
+                cout << endl;
+                acout("Contact deleted!");
+            }
+        } else {
+            vector<string> choices = {"Back"};
+            for(Contact c : contactsFound) {
+                choices.push_back(c.GetDisplayText());
+            }
+
+            int res = interactiveInput("Select contact to delete: ", choices);
+            switch(res) {
+            case 0:
+                break;
+            default:
+                Contact n = contactsFound[res -1];
+                cout << n.GetDisplayText();
+                int res1 = interactiveInput(
+                     "Are you sure you want to delete " + n.GetDisplayText(),
+                     {
+                         "Back", "Delete"
+                     }
+                );
+                if(res1 == 1) {
+                    allContacts.erase(allContacts.begin() + indexes[res-1]);
+                    cout << endl;
+                    acout("Contact deleted!");
+                }
+                break;
+            }
         }
     } else {
         acout("No contact found with the name. :(");
