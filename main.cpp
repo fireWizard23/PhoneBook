@@ -3,6 +3,7 @@
 #include<conio.h>
 #include <windows.h>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -178,7 +179,7 @@ void ViewAllContactsPage() {
     int index = 0;
     for(Contact h : allContacts) {
         cout << index + 1 << ".) ";
-        cout << h.GetDisplayText();
+        cout << h.GetDisplayText() << endl;
         index++;
         Sleep(50);
     }
@@ -305,8 +306,57 @@ void home() {
 
 }
 
+void saveToFile() {
+    ofstream file ("contacts_save.txt", ios::out);
+    if(file.is_open()) {
+        char n = '\n';
+        for(Contact c : allContacts) {
+            file << c.name << n;
+            file << c.number << n;
+            file << c.address << n;
+            file << "\n";
+        }
+    }
+    file.close();
+}
+
+void retrieveData() {
+    fstream file ("contacts_save.txt", ios::in);
+    if(file.is_open()) {
+        string t;
+        Contact contact;
+        int index = 0;
+        while(getline(file, t)) {
+            cout << t << " " << index << endl;
+            switch(index) {
+            case 0:
+                contact.name = t;
+                break;
+            case 1:
+                contact.number = t;
+                break;
+            case 2:
+                contact.address = t;
+                break;
+            }
+            if(index + 1 == 3) {
+
+                allContacts.push_back(contact);
+            }
+            if(!isEmpty(t)) {
+                index = (index + 1) % 3;
+            }
+
+
+        }
+    }
+    file.close();
+}
 
 
 int main() {
+
+    retrieveData();
     home();
+    saveToFile();
 }
