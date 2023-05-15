@@ -181,7 +181,7 @@ void ViewAllContactsPage() {
         cout << index + 1 << ".) ";
         cout << h.GetDisplayText() << endl;
         index++;
-        Sleep(50);
+        Sleep(70);
     }
 
     pause();
