@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1684149681 source:c:\users\richard\documents\codeblocks\school\phonebook\main.cpp
+	<iostream>
+	<vector>
+	<conio.h>
+	<windows.h>
+	<string>
+
