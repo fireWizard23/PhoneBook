@@ -416,4 +416,5 @@ int main() {
     retrieveData();
     home();
     saveToFile();
+    return 0;
 }
