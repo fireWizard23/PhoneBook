@@ -176,8 +176,6 @@ void getLine(string label, string& input) {
 
 
 vector<Contact> allContacts;
-int contactListCount = 0;
-
 
 void ViewAllContactsPage() {
     clear_screen();
