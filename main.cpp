@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <string>
 #include <fstream>
+#include<string.h>
 
 using namespace std;
 
@@ -215,25 +216,48 @@ void AddContactPage() {
 
 }
 
+bool IsEqual(string a, string b) {
 
+
+
+    if(a.size() != b.size()) {
+        return false;
+    }
+
+    if(a == b) {
+        return true;
+    }
+
+    int index = 0;
+    for(char c : a) {
+        if(toupper(c) != toupper(b[index])) {
+            return false;
+        }
+
+        index++;
+    }
+
+    return true;
+
+}
 
 
 void FindContactPage() {
     clear_screen();
     string name = "";
-    Contact n;
-    bool foundContact = false;
+    vector<Contact> contactsFound;
+
     getLine("Enter name: ", name);
     for(Contact c : allContacts) {
-        if(c.name == name) {
-            n = c;
-            foundContact = true;
-            break;
+        if(IsEqual(c.name, name)) {
+            contactsFound.push_back(c);
         }
     }
 
-    if(foundContact) {
-        cout << n.GetDisplayText();
+    if(contactsFound.size() > 0) {
+        for(Contact c : contactsFound) {
+            cout << c.GetDisplayText();
+        }
     } else {
         acout("No contact found with the name. :(");
     }
