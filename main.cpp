@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 
 using namespace std;
@@ -73,6 +74,12 @@ void acout(string h, bool skippable = true, int ms = 20)
             break;
         }
     }
+}
+
+bool ContactCompare(const Contact& a, const Contact& b)
+{
+    // smallest comes first
+    return a.name < b.name;
 }
 
 
@@ -177,6 +184,7 @@ void ViewAllContactsPage() {
     if(allContacts.size() ==0) {
         acout( "No contacts to show :( \n");
     }
+    sort(allContacts.begin(), allContacts.end(), ContactCompare);
     int index = 0;
     for(Contact h : allContacts) {
         cout << index + 1 << ".) ";
