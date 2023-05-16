@@ -10,6 +10,17 @@
 using namespace std;
 
 
+#pragma region ---------------------------- Function Declarations
+void HomePage();
+void ViewAllContactsPage();
+void DeleteContactPage();
+void AddContactPage();
+void FindContactPage();
+void RetrieveData();
+void SaveToFile();
+#pragma endregion
+
+
 struct Contact {
     string number;
     string name;
@@ -30,6 +41,9 @@ struct Contact {
 
 };
 
+
+#pragma region ---------------------------- Constants
+
 const int KEY_UP = 72;
 const int KEY_DOWN = 80;
 const int KEY_ENTER = 13;
@@ -37,20 +51,40 @@ const int KEY_SPACE = 32;
 const int KEY_W = 119;
 const int KEY_S = 115;
 
-void home();
+#pragma endregion
 
-void pause() {
+
+#pragma region ----------------------------Global Variables
+
+vector<Contact> allContacts;
+
+#pragma endregion
+
+
+int main() {
+
+    RetrieveData();
+    HomePage();
+    SaveToFile();
+    return 0;
+}
+
+
+
+#pragma region ---------------------------- General functions
+
+void Pause() {
     cout << endl << endl;
     system("PAUSE");
 
 }
 
-void clear_screen()
+void ClearScreen()
 {
     system("CLS");
 }
 
-void clear_input()
+void ClearInput()
 {
     cin.clear();
     while (cin.get() != '\n')
@@ -84,7 +118,28 @@ bool ContactCompare(const Contact& a, const Contact& b)
 
 
 
-int interactiveInput(string label, vector<string> choices, string endLabel = "Press ENTER/SPACE to select. Arrow keys to move. \n")
+bool IsEqual(string a, string b) {
+    if(a.size() != b.size()) {
+        return false;
+    }
+
+    if(a == b) {
+        return true;
+    }
+    int index = 0;
+    for(char c : a) {
+        if(toupper(c) != toupper(b[index])) {
+            return false;
+        }
+
+        index++;
+    }
+    return true;
+
+}
+
+
+int InteractiveInput(string label, vector<string> choices, string endLabel = "Press ENTER/SPACE to select. Arrow keys to move. \n")
 {
     int _index = 0;
     int c = 0;
@@ -92,7 +147,7 @@ int interactiveInput(string label, vector<string> choices, string endLabel = "Pr
     int choiceIndex = 0;
     int maxNum = choices.size() - 1;
 
-    clear_screen();
+    ClearScreen();
     acout(label + "\n\n");
     Sleep(75);
     for (auto h : choices)
@@ -115,7 +170,7 @@ int interactiveInput(string label, vector<string> choices, string endLabel = "Pr
     while (looping)
     {
         choiceIndex = 0;
-        clear_screen();
+        ClearScreen();
         cout << label << endl
              << endl;
 
@@ -163,207 +218,23 @@ int interactiveInput(string label, vector<string> choices, string endLabel = "Pr
     return _index;
 }
 
-bool isEmpty(string h) {
+bool IsEmpty(string h) {
     return h.empty() || h.find_first_not_of(' ') == string::npos;
 }
 
-void getLine(string label, string& input) {
-    while(isEmpty(input)) {
+void GetLine(string label, string& input) {
+    while(IsEmpty(input)) {
         acout(label);
         getline(cin, input);
     }
 }
 
-
-vector<Contact> allContacts;
-
-void ViewAllContactsPage() {
-    clear_screen();
-    if(allContacts.size() ==0) {
-        acout( "No contacts to show :( \n");
-    }
-    sort(allContacts.begin(), allContacts.end(), ContactCompare);
-    int index = 0;
-    for(Contact h : allContacts) {
-        cout << index + 1 << ".) ";
-        cout << h.GetDisplayText() << endl;
-        index++;
-        Sleep(70);
-    }
-
-    pause();
-    home();
-}
-
-void AddContactPage() {
-    clear_screen();
-    Contact newContact;
-    getLine("Enter name: ", newContact.name);
-    getLine("Enter Number: ", newContact.number);
-    getLine("Enter Address: ", newContact.address);
-    cout << endl;
+#pragma endregion
 
 
-    bool isUsed = false;
-    for(Contact c : allContacts) {
-        if(c.number == newContact.number) {
-            acout("Contact number is already in used.");
-            isUsed = true;
-            break;
-        }
-    }
-    if(!isUsed) {
-        allContacts.push_back(newContact);
-        cout << "Added sucessfully!";
-    }
+#pragma region ---------------------------- File saving functions
 
-    pause();
-    home();
-
-}
-
-bool IsEqual(string a, string b) {
-
-
-
-    if(a.size() != b.size()) {
-        return false;
-    }
-
-    if(a == b) {
-        return true;
-    }
-
-    int index = 0;
-    for(char c : a) {
-        if(toupper(c) != toupper(b[index])) {
-            return false;
-        }
-
-        index++;
-    }
-
-    return true;
-
-}
-
-
-void FindContactPage() {
-    clear_screen();
-    string name = "";
-    vector<Contact> contactsFound;
-
-    getLine("Enter name: ", name);
-    for(Contact c : allContacts) {
-        if(IsEqual(c.name, name)) {
-            contactsFound.push_back(c);
-        }
-    }
-
-    if(contactsFound.size() > 0) {
-        for(Contact c : contactsFound) {
-            cout << c.GetDisplayText();
-        }
-    } else {
-        acout("No contact found with the name. :(");
-    }
-
-    pause();
-    home();
-}
-
-
-void DeleteContactPage() {
-    clear_screen();
-    string name = "";
-    vector<Contact> contactsFound;
-    vector<int> indexes;
-    int index = 0;
-    getLine("Enter name: ", name);
-    for(Contact c : allContacts) {
-        if(IsEqual(c.name, name)) {
-            contactsFound.push_back(c);
-            indexes.push_back(index);
-        }
-        index++;
-    }
-
-
-    if(contactsFound.size() > 0) {
-        if(contactsFound.size() == 1) {
-            Contact n = contactsFound[0];
-            cout << n.GetDisplayText();
-            int res = interactiveInput(
-                 "Are you sure you want to delete " + n.GetDisplayText(),
-                 {
-                     "Back", "Delete"
-                 }
-            );
-            if(res == 1) {
-                allContacts.erase(allContacts.begin() + indexes[0]);
-                cout << endl;
-                acout("Contact deleted!");
-            }
-        } else {
-            vector<string> choices = {"Back"};
-            for(Contact c : contactsFound) {
-                choices.push_back(c.GetDisplayText());
-            }
-
-            int res = interactiveInput("Select contact to delete: ", choices);
-            switch(res) {
-            case 0:
-                break;
-            default:
-                Contact n = contactsFound[res -1];
-                cout << n.GetDisplayText();
-                int res1 = interactiveInput(
-                     "Are you sure you want to delete " + n.GetDisplayText(),
-                     {
-                         "Back", "Delete"
-                     }
-                );
-                if(res1 == 1) {
-                    allContacts.erase(allContacts.begin() + indexes[res-1]);
-                    cout << endl;
-                    acout("Contact deleted!");
-                }
-                break;
-            }
-        }
-    } else {
-        acout("No contact found with the name. :(");
-    }
-
-    pause();
-    home();
-}
-
-
-
-
-void home() {
-    int a = interactiveInput(
-                     "PhoneBook \n \nWhat would you like to do?",
-                     {"View All Contacts", "Find contact", "Add Contact", "Delete Contact", "Quit"});
-    switch(a) {
-    case 0:
-        ViewAllContactsPage();
-        break;
-    case 1:
-        FindContactPage();
-        break;
-    case 2:
-        AddContactPage();
-        break;
-    case 3:
-        DeleteContactPage();
-        break;
-    }
-
-}
-
-void saveToFile() {
+void SaveToFile() {
     ofstream file ("contacts_save.txt", ios::out);
     if(file.is_open()) {
         char n = '\n';
@@ -377,7 +248,7 @@ void saveToFile() {
     file.close();
 }
 
-void retrieveData() {
+void RetrieveData() {
     fstream file ("contacts_save.txt", ios::in);
     if(file.is_open()) {
         string t;
@@ -400,7 +271,7 @@ void retrieveData() {
 
                 allContacts.push_back(contact);
             }
-            if(!isEmpty(t)) {
+            if(!IsEmpty(t)) {
                 index = (index + 1) % 3;
             }
 
@@ -409,12 +280,166 @@ void retrieveData() {
     }
     file.close();
 }
+#pragma endregion
 
+#pragma region ---------------------------- Pages
 
-int main() {
+void HomePage() {
+    int a = InteractiveInput(
+                     "PhoneBook \n \nWhat would you like to do?",
+                     {"View All Contacts", "Find contact", "Add Contact", "Delete Contact", "Quit"});
+    switch(a) {
+    case 0:
+        ViewAllContactsPage();
+        break;
+    case 1:
+        FindContactPage();
+        break;
+    case 2:
+        AddContactPage();
+        break;
+    case 3:
+        DeleteContactPage();
+        break;
+    }
 
-    retrieveData();
-    home();
-    saveToFile();
-    return 0;
 }
+
+void ViewAllContactsPage() {
+    ClearScreen();
+    if(allContacts.size() ==0) {
+        acout( "No contacts to show :( \n");
+    }
+    sort(allContacts.begin(), allContacts.end(), ContactCompare);
+    int index = 0;
+    for(Contact h : allContacts) {
+        cout << index + 1 << ".) ";
+        cout << h.GetDisplayText() << endl;
+        index++;
+        Sleep(70);
+    }
+
+    Pause();
+    HomePage();
+}
+
+void AddContactPage() {
+    ClearScreen();
+    Contact newContact;
+    GetLine("Enter name: ", newContact.name);
+    GetLine("Enter Number: ", newContact.number);
+    GetLine("Enter Address: ", newContact.address);
+    cout << endl;
+
+
+    bool isUsed = false;
+    for(Contact c : allContacts) {
+        if(c.number == newContact.number) {
+            acout("Contact number is already in used.");
+            isUsed = true;
+            break;
+        }
+    }
+    if(!isUsed) {
+        allContacts.push_back(newContact);
+        cout << "Added sucessfully!";
+    }
+
+    Pause();
+    HomePage();
+
+}
+
+void FindContactPage() {
+    ClearScreen();
+    string name = "";
+    vector<Contact> contactsFound;
+
+    GetLine("Enter name: ", name);
+    for(Contact c : allContacts) {
+        if(IsEqual(c.name, name)) {
+            contactsFound.push_back(c);
+        }
+    }
+
+    if(contactsFound.size() > 0) {
+        for(Contact c : contactsFound) {
+            cout << c.GetDisplayText();
+        }
+    } else {
+        acout("No contact found with the name. :(");
+    }
+
+    Pause();
+    HomePage();
+}
+
+void DeleteContactPage() {
+    ClearScreen();
+    string name = "";
+    vector<Contact> contactsFound;
+    vector<int> indexes;
+    int index = 0;
+    GetLine("Enter name: ", name);
+    for(Contact c : allContacts) {
+        if(IsEqual(c.name, name)) {
+            contactsFound.push_back(c);
+            indexes.push_back(index);
+        }
+        index++;
+    }
+
+
+    if(contactsFound.size() > 0) {
+        if(contactsFound.size() == 1) {
+            Contact n = contactsFound[0];
+            cout << n.GetDisplayText();
+            int res = InteractiveInput(
+                 "Are you sure you want to delete " + n.GetDisplayText(),
+                 {
+                     "Back", "Delete"
+                 }
+            );
+            if(res == 1) {
+                allContacts.erase(allContacts.begin() + indexes[0]);
+                cout << endl;
+                acout("Contact deleted!");
+            }
+        } else {
+            vector<string> choices = {"Back"};
+            for(Contact c : contactsFound) {
+                choices.push_back(c.GetDisplayText());
+            }
+
+            int res = InteractiveInput("Select contact to delete: ", choices);
+            switch(res) {
+            case 0:
+                break;
+            default:
+                Contact n = contactsFound[res -1];
+                cout << n.GetDisplayText();
+                int res1 = InteractiveInput(
+                     "Are you sure you want to delete " + n.GetDisplayText(),
+                     {
+                         "Back", "Delete"
+                     }
+                );
+                if(res1 == 1) {
+                    allContacts.erase(allContacts.begin() + indexes[res-1]);
+                    cout << endl;
+                    acout("Contact deleted!");
+                }
+                break;
+            }
+        }
+    } else {
+        acout("No contact found with the name. :(");
+    }
+
+    Pause();
+    HomePage();
+}
+
+#pragma endregion
+
+
