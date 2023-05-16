@@ -56,7 +56,7 @@ struct Contact {
 
     string GetDisplayText() {
         string n = "\n";
-        return n+"Name: " + name + n + "Number: " + number + n + "Address: " + address + n;
+        return "Name: " + name + n + "Number: " + number + n + "Address: " + address + n;
     }
 
     void TrimMembers() {
@@ -430,6 +430,7 @@ void FindContactPage() {
     vector<Contact> contactsFound;
 
     GetLine("Enter name: ", name);
+    cout  << endl ;
     for(Contact c : allContacts) {
         if(IsEqual(c.name, name)) {
             contactsFound.push_back(c);
@@ -437,13 +438,14 @@ void FindContactPage() {
     }
 
     if(contactsFound.size() > 0) {
+        cout<< "Here are the contacts with the name: " << endl <<endl;
         for(Contact c : contactsFound) {
-            cout << c.GetDisplayText();
+            cout << c.GetDisplayText() << endl;
         }
     } else {
         acout("No contact found with the name. :(");
     }
-
+    Sleep(300);
     Pause();
     HomePage();
 }
