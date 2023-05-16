@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <cctype>
 
 
 using namespace std;
@@ -18,7 +19,25 @@ void AddContactPage();
 void FindContactPage();
 void RetrieveData();
 void SaveToFile();
+string Trim(const string& str);
 #pragma endregion
+
+
+
+
+
+#pragma region ---------------------------- Constants
+
+const int KEY_UP = 72;
+const int KEY_DOWN = 80;
+const int KEY_ENTER = 13;
+const int KEY_SPACE = 32;
+const int KEY_W = 119;
+const int KEY_S = 115;
+
+#pragma endregion
+
+
 
 
 struct Contact {
@@ -38,20 +57,14 @@ struct Contact {
         return n+"Name: " + name + n + "Number: " + number + n + "Address: " + address + n;
     }
 
+    void TrimMembers() {
+        number = Trim(number);
+        name = Trim(name);
+        address = Trim(address);
+    }
+
 
 };
-
-
-#pragma region ---------------------------- Constants
-
-const int KEY_UP = 72;
-const int KEY_DOWN = 80;
-const int KEY_ENTER = 13;
-const int KEY_SPACE = 32;
-const int KEY_W = 119;
-const int KEY_S = 115;
-
-#pragma endregion
 
 
 #pragma region ----------------------------Global Variables
@@ -72,6 +85,35 @@ int main() {
 
 
 #pragma region ---------------------------- General functions
+
+
+string Trim(const string& str)
+{
+    std::string result;
+    bool prevIsWhitespace = true; // Initially set to true to remove leading whitespace
+
+    for (char ch : str)
+    {
+        if (std::isspace(ch))
+        {
+            if (!prevIsWhitespace)
+            {
+                result.push_back(' ');
+                prevIsWhitespace = true;
+            }
+        }
+        else
+        {
+            result.push_back(ch);
+            prevIsWhitespace = false;
+        }
+    }
+
+    if (!result.empty() && std::isspace(result.back()))
+        result.pop_back();
+
+    return result;
+}
 
 void Pause() {
     cout << endl << endl;
@@ -341,6 +383,7 @@ void AddContactPage() {
         }
     }
     if(!isUsed) {
+        newContact.TrimMembers();
         allContacts.push_back(newContact);
         cout << "Added sucessfully!";
     }
