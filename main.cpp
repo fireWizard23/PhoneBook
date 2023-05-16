@@ -157,13 +157,7 @@ void ClearScreen()
     system("CLS");
 }
 
-void ClearInput()
-{
-    cin.clear();
-    while (cin.get() != '\n')
-    {
-    }
-}
+
 
 void acout(string h, bool skippable = true, int ms = 20)
 {
