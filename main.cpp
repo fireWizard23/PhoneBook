@@ -374,6 +374,7 @@ void HomePage() {
 
 void ViewAllContactsPage() {
     ClearScreen();
+    cout << "All contacts list" << endl<<endl;
     if(allContacts.size() ==0) {
         acout( "No contacts to show :( \n");
     }
@@ -392,6 +393,7 @@ void ViewAllContactsPage() {
 
 void AddContactPage() {
     ClearScreen();
+    cout << "Create a new contact\n\n";
     Contact newContact;
     GetLine("Enter name: ", newContact.name);
     GetLine("Enter Number: ", newContact.number, IsNotValidPhoneNumber);
@@ -420,6 +422,7 @@ void AddContactPage() {
 
 void FindContactPage() {
     ClearScreen();
+    cout << "Find a contact\n\n";
     string name = "";
     vector<Contact> contactsFound;
 
@@ -446,6 +449,7 @@ void FindContactPage() {
 
 void DeleteContactPage() {
     ClearScreen();
+    cout << "Delete a contact\n\n";
     string name = "";
     vector<Contact> contactsFound;
     vector<int> indexes;
