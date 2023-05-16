@@ -6,6 +6,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <functional>
 
 
 using namespace std;
@@ -20,6 +21,7 @@ void FindContactPage();
 void RetrieveData();
 void SaveToFile();
 string Trim(const string& str);
+bool IsNotValidPhoneNumber(const string& number);
 #pragma endregion
 
 
@@ -85,6 +87,35 @@ int main() {
 
 
 #pragma region ---------------------------- General functions
+
+
+bool IsValidPhoneNumber(const std::string& phoneNumber)
+{
+    // Check if the string contains only valid characters
+    for (char ch : phoneNumber)
+    {
+        if (!std::isdigit(ch) && ch != '-' && ch != '(' && ch != ')' && ch != ' ' && ch != '+')
+            return false;
+    }
+
+    // Count the number of digits in the string
+    int digitCount = 0;
+    for (char ch : phoneNumber)
+    {
+        if (std::isdigit(ch))
+            digitCount++;
+    }
+
+    // Check if the phone number has at least 10 digits
+    if (digitCount < 5)
+        return false;
+
+    // The phone number is valid
+    return true;
+}
+bool IsNotValidPhoneNumber(const std::string& phoneNumber) {
+    return !IsValidPhoneNumber(phoneNumber);
+}
 
 
 string Trim(const string& str)
@@ -264,8 +295,8 @@ bool IsEmpty(string h) {
     return h.empty() || h.find_first_not_of(' ') == string::npos;
 }
 
-void GetLine(string label, string& input) {
-    while(IsEmpty(input)) {
+void GetLine(string label, string& input, function<bool(const std::string&)> invalidator=IsEmpty) {
+    while(invalidator(input)) {
         acout(label);
         getline(cin, input);
     }
@@ -369,7 +400,7 @@ void AddContactPage() {
     ClearScreen();
     Contact newContact;
     GetLine("Enter name: ", newContact.name);
-    GetLine("Enter Number: ", newContact.number);
+    GetLine("Enter Number: ", newContact.number, IsNotValidPhoneNumber);
     GetLine("Enter Address: ", newContact.address);
     cout << endl;
 
