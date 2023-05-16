@@ -18,6 +18,7 @@ void ViewAllContactsPage();
 void DeleteContactPage();
 void AddContactPage();
 void FindContactPage();
+void DeleteAllPage();
 void RetrieveData();
 void SaveToFile();
 string Trim(const string& str);
@@ -355,7 +356,7 @@ void RetrieveData() {
 void HomePage() {
     int a = InteractiveInput(
                      "PhoneBook \n \nWhat would you like to do?",
-                     {"View All Contacts", "Find contact", "Add Contact", "Delete Contact", "Quit"});
+                     {"View All Contacts", "Find contact", "Add Contact", "Delete Contact", "Delete All", "Quit"});
     switch(a) {
     case 0:
         ViewAllContactsPage();
@@ -369,8 +370,28 @@ void HomePage() {
     case 3:
         DeleteContactPage();
         break;
+    case 4:
+        DeleteAllPage();
     }
 
+}
+void DeleteAllPage() {
+    ClearScreen();
+    cout << "Delete all?" << endl<< endl;
+    if(allContacts.size() > 0) {
+        int res = InteractiveInput("Are you sure you want to delete everything?", {"No", "Yes"});
+        cout << endl<< endl;
+        if(res == 1) {
+            allContacts.clear();
+            acout("Deletion succesfull!");
+        } else{
+            acout("Deletion aborted.");
+        }
+    } else {
+        acout("No contacts to delete!");
+    }
+    Pause();
+    HomePage();
 }
 
 void ViewAllContactsPage() {
