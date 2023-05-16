@@ -469,7 +469,7 @@ void DeleteContactPage() {
             Contact n = contactsFound[0];
             cout << n.GetDisplayText();
             int res = InteractiveInput(
-                 "Are you sure you want to delete " + n.GetDisplayText(),
+                 "Are you sure you want to delete \n\n" + n.GetDisplayText(),
                  {
                      "Back", "Delete"
                  }
@@ -493,7 +493,7 @@ void DeleteContactPage() {
                 Contact n = contactsFound[res -1];
                 cout << n.GetDisplayText();
                 int res1 = InteractiveInput(
-                     "Are you sure you want to delete " + n.GetDisplayText(),
+                     "Are you sure you want to delete \n\n" + n.GetDisplayText(),
                      {
                          "Back", "Delete"
                      }
