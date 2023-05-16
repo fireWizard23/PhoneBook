@@ -81,6 +81,7 @@ int main() {
     RetrieveData();
     HomePage();
     SaveToFile();
+    cout << endl << endl << "Good Bye!" << endl << endl;
     return 0;
 }
 
