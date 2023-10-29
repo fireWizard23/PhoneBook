@@ -1,12 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <conio.h>
-#include <windows.h>
-#include <string>
 #include <fstream>
 #include <algorithm>
-#include <cctype>
-#include <functional>
 #include "./src/utils.h"
 #include "./src/contact.h"
 

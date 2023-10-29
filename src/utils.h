@@ -2,6 +2,7 @@
 #include <string>
 #include <windows.h>
 #include <conio.h>
+#include <functional>
 #include "constants.h"
 
 using namespace std;
