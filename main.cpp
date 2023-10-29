@@ -12,7 +12,6 @@
 
 using namespace std;
 
-#pragma region---------------------------- Function Declarations
 void HomePage();
 void ViewAllContactsPage();
 void DeleteContactPage();
@@ -21,7 +20,6 @@ void FindContactPage();
 void DeleteAllPage();
 void RetrieveData();
 void SaveToFile();
-#pragma endregion
 
 vector<Contact> allContacts;
 
@@ -37,8 +35,6 @@ int main()
          << endl;
     return 0;
 }
-
-#pragma region---------------------------- File saving functions
 
 void SaveToFile()
 {
@@ -93,9 +89,6 @@ void RetrieveData()
     }
     file.close();
 }
-#pragma endregion
-
-#pragma region---------------------------- Pages
 
 void HomePage()
 {
@@ -309,5 +302,3 @@ void DeleteContactPage()
     Pause();
     HomePage();
 }
-
-#pragma endregion
