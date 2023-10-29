@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
-#include <fstream>
 #include <algorithm>
 #include "./src/utils.h"
 #include "./src/contact.h"
+#include "./src/file_save.h"
 
 using namespace std;
 
@@ -13,76 +13,20 @@ void DeleteContactPage();
 void AddContactPage();
 void FindContactPage();
 void DeleteAllPage();
-void RetrieveData();
-void SaveToFile();
 
 vector<Contact> allContacts;
 
 int main()
 {
 
-    RetrieveData();
+    allContacts = RetrieveData();
     HomePage();
-    SaveToFile();
+    SaveToFile(allContacts);
     cout << endl
          << endl
          << "Good Bye!" << endl
          << endl;
     return 0;
-}
-
-void SaveToFile()
-{
-    ofstream file("contacts_save.txt", ios::out);
-    if (file.is_open())
-    {
-        char n = '\n';
-        for (Contact c : allContacts)
-        {
-            file << c.name << n;
-            file << c.number << n;
-            file << c.address << n;
-            file << "\n";
-        }
-    }
-    file.close();
-}
-
-void RetrieveData()
-{
-    fstream file("contacts_save.txt", ios::in);
-    if (file.is_open())
-    {
-        string t;
-        Contact contact;
-        int index = 0;
-        while (getline(file, t))
-        {
-            cout << t << " " << index << endl;
-            switch (index)
-            {
-            case 0:
-                contact.name = t;
-                break;
-            case 1:
-                contact.number = t;
-                break;
-            case 2:
-                contact.address = t;
-                break;
-            }
-            if (index + 1 == 3)
-            {
-
-                allContacts.push_back(contact);
-            }
-            if (!IsEmpty(t))
-            {
-                index = (index + 1) % 3;
-            }
-        }
-    }
-    file.close();
 }
 
 void HomePage()

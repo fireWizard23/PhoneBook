@@ -1,3 +1,4 @@
+#pragma once
 using namespace std;
 
 const int KEY_UP = 72;
